@@ -1,12 +1,16 @@
 
 from os import path
-import PyPDF4
-
-from pdfminer.high_level import extract_pages
-from pdfminer.layout import LTTextContainer
 
 import modules.Robinhood as RH
 
-def process(pdf_file):
-	rh = RH.Robinhood()
-	rh.load_pdf(pdf_file)
+def process(output_dir):
+    rh = RH.Robinhood()
+    rh.login()
+    rh.get_all_positions(output_dir)
+    rh.get_current_stocks_positions(output_dir)
+    rh.logout()
+
+def process_data(input_dir):
+    rh = RH.Robinhood()
+    rh.load_data_from_file(input_dir)
+
