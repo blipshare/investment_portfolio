@@ -1,7 +1,6 @@
 
 from os import environ, path
 import modules.PortfolioInterface as PI
-import modules.Robinhood as RH
 import robin_stocks.robinhood as rs
 
 import re
