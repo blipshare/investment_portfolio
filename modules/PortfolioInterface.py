@@ -1,5 +1,7 @@
 import abc
 
+from os import path
+
 import pyarrow as pa
 import pyarrow.parquet as pq
 
@@ -8,10 +10,16 @@ class PortfolioInterface(metaclass=abc.ABCMeta):
     def __subclasshook__(cls, subclass):
         return (hasattr(subclass, 'load_pdf') and
             callable(subclass.login) or
+            callable(subclass.get_top_movers) or
             NotImplementedError)
 
     @abc.abstractmethod
     def login(self):
+        """ The child classes must implement this method """
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def get_top_movers(self, output_dir, sp500=False, direction=None):
         """ The child classes must implement this method """
         raise NotImplementedError
 
