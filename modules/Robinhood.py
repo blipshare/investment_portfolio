@@ -1,12 +1,12 @@
 
 from os import environ, path
-import modules.PortfolioInterface as PI
+from .PortfolioInterface import PortfolioInterface as PI
 import robin_stocks.robinhood as rs
 
 import re
 import pandas as pd
 
-class Robinhood(PI.PortfolioInterface):
+class Robinhood(PI):
     def __init__(self):
         self.access_info = None
 
@@ -38,33 +38,37 @@ class Robinhood(PI.PortfolioInterface):
             # get all the stocks the user currently holds
             data = rs.account.build_holdings(with_dividends=True)
             if data:
-                # build a dataframe
+                 # build a dataframe
                 data = pd.DataFrame(data)
 
                 # write to an output file for now for testing purposes
                 self.write_to_output_file(data, 'current_stocks_info', output_dir)
 
 
-    def get_top_movers(self, output_dir, sp500=False, direction=None):
-        if self.access_info and self.access_info['access_token']:
-            # get the top movers
-            if sp500:
-                if direction:
-                    data = rs.markets.get_top_movers_sp500(direction=direction)
-                    if 'up' in direction:
-                        name = 'sp500_top_movers_up'
-                    else:
-                        name = 'sp500_top_movers_down'
-            else:
-                data = rs.markets.get_top_movers()
-                name = 'rh_top_movers'
+    def get_top_movers(self, sp500=False, direction=None, output_dir=None):
+        # get the top movers
+        data = None
 
-            if data:
-                # build a dataframe
-                data = pd.DataFrame(data)
+        if sp500:
+            if direction:
+                data = rs.markets.get_top_movers_sp500(direction=direction)
+                if 'up' in direction:
+                    name = 'sp500_top_movers_up'
+                else:
+                    name = 'sp500_top_movers_down'
+        else:
+            data = rs.markets.get_top_movers()
+            name = 'rh_top_movers'
 
+        if data:
+            # build a dataframe
+            data = pd.DataFrame(data)
+
+            if output_dir:
                 # write to an output file for now for testing purposes
                 self.write_to_output_file(data, name, output_dir)
+
+            return data
         
 
     def load_data_from_file(self, input_dir):

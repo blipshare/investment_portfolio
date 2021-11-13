@@ -1,7 +1,7 @@
 
 from os import path
 
-import modules.Robinhood as RH
+from modules import Robinhood as RH
 
 def process(output_dir):
     rh = RH.Robinhood()
